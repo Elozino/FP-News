@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image,TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {COLORS} from '../constants/colors';
 
@@ -7,6 +7,7 @@ const NewsListing = ({newsData, navigation}) => {
   topic.charAt(0).toUpperCase();
   return (
     <TouchableOpacity
+      key={newsData.id}
       style={styles.container}
       onPress={() => navigation.navigate('NewsDetails', newsData)}>
       <View>
