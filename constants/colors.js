@@ -1,4 +1,5 @@
 export const COLORS = {
   blue: '#32439F',
-  white: "#fff"
+  white: '#fff',
+  lightgrey: 'lightgrey',
 };
