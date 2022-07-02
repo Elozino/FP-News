@@ -28,16 +28,25 @@ const Register = ({navigation}) => {
       <View style={styles.formContainer}>
         <View style={styles.formContainer}>
           <Text style={styles.inputLabel}>Full Name</Text>
-          <TextInput placeholder="Fullname" style={styles.inputField} />
+          <TextInput
+            placeholder="Fullname"
+            onChangeText={text => ''}
+            style={styles.inputField}
+          />
         </View>
         <View style={styles.formContainer}>
           <Text style={styles.inputLabel}>Username</Text>
-          <TextInput placeholder="Username" style={styles.inputField} />
+          <TextInput
+            placeholder="Username"
+            onChangeText={text => ''}
+            style={styles.inputField}
+          />
         </View>
         <View style={styles.formContainer}>
           <Text style={styles.inputLabel}>Telephone</Text>
           <TextInput
             placeholder="Telephone"
+            onChangeText={text => ''}
             keyboardType="phone-pad"
             style={styles.inputField}
           />

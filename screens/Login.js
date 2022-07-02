@@ -31,6 +31,7 @@ const Login = ({navigation}) => {
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
             placeholder="Email"
+            onChangeText={text => ''}
             keyboardType="email-address"
             style={styles.inputField}
           />
@@ -39,6 +40,7 @@ const Login = ({navigation}) => {
           <Text style={styles.inputLabel}>Password</Text>
           <TextInput
             placeholder="Password"
+            onChangeText={text => ''}
             secureTextEntry={true}
             style={styles.inputField}
           />

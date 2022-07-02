@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "111893393483",
+    "project_id": "lendsqr-bdaa4",
+    "storage_bucket": "lendsqr-bdaa4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111893393483:android:1f01137d948daeea79ddce",
+        "android_client_info": {
+          "package_name": "com.barereactnative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111893393483-3iu9hrr0cks87706gga5r42gsgmm2vfi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrMismefWY6NQgDXaKmxkFrYwXEviGGxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111893393483-3iu9hrr0cks87706gga5r42gsgmm2vfi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,45 +1,32 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-// import {newsApi} from '../config/redux-toolkit/api/NewsApi';
+import {
+  fetchNews,
+  itemsSelector,
+} from '../config/redux-toolkit/features/newsSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS} from '../constants/colors';
+import NewsListing from '../components/NewsListing';
 
-const Home = () => {
-  const {news, populateNews} = useSelector(state => state.news);
+const Home = ({navigation}) => {
   const dispatch = useDispatch();
 
-  const options = {
-    method: 'GET',
-    url: 'https://free-news.p.rapidapi.com/v1/search',
-    params: {q: 'Elon Musk', lang: 'en'},
-    headers: {
-      'X-RapidAPI-Key': '09703e6698mshf43e2b477fb9b7bp1cab0djsn52091d834332',
-      'X-RapidAPI-Host': 'free-news.p.rapidapi.com',
-    },
-  };
-
-  const newsAi = async () => {
-    await axios
-      .request(options)
-      .then(function (response) {
-        // console.log('newaiFunc', response.data);
-        console.log(response.data);
-        // response.data;
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  };
-
-  // const data = newsAi();
-  // console.log({data});
-
+  // fetch data from our store
+  const {loading, error, news} = useSelector(itemsSelector);
+  // console.log(loading, error, news);
+  // hook to fetch items
   useEffect(() => {
-    // dispatch(populateNews);
-    newsAi();
-  }, []);
+    dispatch(fetchNews());
+  }, [dispatch]);
 
   return (
     <View style={styles.container}>
@@ -49,12 +36,29 @@ const Home = () => {
           <Text style={styles.username}>Elozino</Text>
         </View>
         <TouchableOpacity style={styles.refresh}>
-          <Ionicons name="refresh" size={30} />
+          <Text>Logout</Text>
+          {/* <Ionicons name="refresh" size={30} /> */}
         </TouchableOpacity>
       </View>
       <Text style={styles.newsText}>News</Text>
-     
-   
+      {/* <ScrollView>
+        <Text>
+          {news.articles.map(article => (
+            <NewsListing newsData={article} navigation={navigation} />
+          ))}
+        </Text>
+      </ScrollView> */}
+      <FlatList
+        data={news.articles}
+        renderItem={({item}) => (
+          <NewsListing newsData={item} navigation={navigation} />
+        )}
+        keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          marginVertical: 10,
+        }}
+      />
     </View>
   );
 };

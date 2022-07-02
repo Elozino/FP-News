@@ -15,11 +15,38 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {COLORS} from '../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+// import {createUserWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
+// import {auth, googleProvider} from '../config/firebase/firebaseConfig';
 
 const RegisterAuth = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleRegister = () => {
+    // createUserWithEmailAndPassword(auth, email, password).then(
+    //   userCredentials => {
+    //     const user = userCredentials.user;
+    //     console.log(user.email);
+    //   },
+    // );
+    navigation.navigate('Home')
+  };
+
+  const handleGoogleAuth = () => {
+    // signInWithPopup(auth, googleProvider).then(result =>
+    //   navigation.navigate('Home'),
+    // );
+  };
+
+  // useEffect(() => {
+  //   auth.onAuthStateChanged(user => {
+  //     if (user) {
+  //       navigation.navigate('Home');
+  //     }
+  //   });
+  // }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageWrapper}>
@@ -31,6 +58,8 @@ const RegisterAuth = ({navigation}) => {
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
             placeholder="Email"
+            value={email}
+            onChangeText={text => setEmail(text)}
             keyboardType="email-address"
             style={styles.inputField}
           />
@@ -39,12 +68,14 @@ const RegisterAuth = ({navigation}) => {
           <Text style={styles.inputLabel}>Password</Text>
           <TextInput
             placeholder="Password"
+            value={password}
+            onChangeText={text => setPassword(text)}
             secureTextEntry={true}
             style={styles.inputField}
           />
         </View>
       </View>
-      <TouchableOpacity style={styles.google}>
+      <TouchableOpacity style={styles.google} onPress={handleGoogleAuth}>
         <Text style={styles.googleText}>Sign up with </Text>
         <AntDesign name="google" color={COLORS.blue} size={20} />
       </TouchableOpacity>
@@ -54,9 +85,7 @@ const RegisterAuth = ({navigation}) => {
           <Text style={styles.loginText}>Login</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>REGISTER</Text>
       </TouchableOpacity>
     </SafeAreaView>

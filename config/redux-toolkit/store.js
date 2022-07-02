@@ -4,7 +4,7 @@ import newsReducer from './features/newsSlice';
 
 export const store = configureStore({
   reducer: {
-    userDetails: userReducer,
+    user: userReducer,
     news: newsReducer,
   },
 });

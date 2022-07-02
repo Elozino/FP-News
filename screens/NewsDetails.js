@@ -1,12 +1,13 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
 
-const NewsDetails = () => {
+const NewsDetails = ({newsData}) => {
+  console.log(newsData);
   return (
     <View>
       <Text>NewsDetails</Text>
       <View>
-        <Text>Summary</Text>
+        {/* <Image source={{uri: newsData.media}} style={styles.image} /> */}
         <Text>Author</Text>
         <Text>Source</Text>
         <Text>Twitter Account</Text>
