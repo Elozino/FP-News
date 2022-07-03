@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   },
   newDetails: {
     marginLeft: 10,
+    marginBottom: 10,
     flex: 1,
   },
   newText: {

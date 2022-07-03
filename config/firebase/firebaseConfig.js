@@ -2,24 +2,23 @@
 import {initializeApp} from 'firebase/app';
 import {getAnalytics} from 'firebase/analytics';
 import {getAuth, GoogleAuthProvider} from 'firebase/auth';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {getFirestore} from 'firebase/firestore';
+import { getRemoteConfig } from "firebase/remote-config";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyBgeLGFVUVMuWwshQPMPmRK1q45wyzLaS0',
-  authDomain: 'lendsqr-bdaa4.firebaseapp.com',
-  projectId: 'lendsqr-bdaa4',
-  storageBucket: 'lendsqr-bdaa4.appspot.com',
-  messagingSenderId: '111893393483',
-  appId: '1:111893393483:web:9a78088d1460c0d379ddce',
-  measurementId: 'G-M00QZBSM3Y',
+  apiKey: "AIzaSyAMmJb8s480zWdT1tFra_uJzNaG0Su46s4",
+  authDomain: "fp-news-c3cbf.firebaseapp.com",
+  projectId: "fp-news-c3cbf",
+  storageBucket: "fp-news-c3cbf.appspot.com",
+  messagingSenderId: "751970636669",
+  appId: "1:751970636669:web:5b6a71b0a712a60af9b214",
+  measurementId: "G-5G0XH86FD3"
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider()
+export const googleProvider = new GoogleAuthProvider();
+export const remoteConfig = getRemoteConfig(app);

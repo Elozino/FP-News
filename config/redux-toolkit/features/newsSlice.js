@@ -1,5 +1,3 @@
-// slices/items.js
-// -------------------------------------------------------------
 import {createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -10,7 +8,7 @@ export const initialState = {
   news: [],
 };
 
-// our slice
+// slice
 const newsSlice = createSlice({
   name: 'news',
   initialState,
@@ -29,13 +27,13 @@ const newsSlice = createSlice({
   },
 });
 
-// export the actions
+// actions
 export const {setLoading, setItems, setError} = newsSlice.actions;
 
-// export the selector (".news" being same as in slices/index.js's "news: something")
+// selector (".news" being same as in slices/index.js's "news: something")
 export const itemsSelector = state => state.news;
 
-// export the default reducer
+//default reducer
 export default newsSlice.reducer;
 
 const options = {

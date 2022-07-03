@@ -17,8 +17,16 @@ import {
 } from 'react-native';
 import React from 'react';
 import {COLORS} from '../constants/colors';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  fullname,
+  username,
+  phoneNumber,
+  email
+} from '../config/redux-toolkit/features/userSlice';
 
 const Register = ({navigation}) => {
+  const dispatch = useDispatch();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageWrapper}>
@@ -30,7 +38,7 @@ const Register = ({navigation}) => {
           <Text style={styles.inputLabel}>Full Name</Text>
           <TextInput
             placeholder="Fullname"
-            onChangeText={text => ''}
+            onChangeText={text => dispatch(fullname(text))}
             style={styles.inputField}
           />
         </View>
@@ -38,7 +46,7 @@ const Register = ({navigation}) => {
           <Text style={styles.inputLabel}>Username</Text>
           <TextInput
             placeholder="Username"
-            onChangeText={text => ''}
+            onChangeText={text => dispatch(username(text))}
             style={styles.inputField}
           />
         </View>
@@ -46,7 +54,7 @@ const Register = ({navigation}) => {
           <Text style={styles.inputLabel}>Telephone</Text>
           <TextInput
             placeholder="Telephone"
-            onChangeText={text => ''}
+            onChangeText={text => dispatch(phoneNumber(text))}
             keyboardType="phone-pad"
             style={styles.inputField}
           />

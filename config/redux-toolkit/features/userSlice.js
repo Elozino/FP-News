@@ -6,6 +6,10 @@ const initialState = {
   email: '',
   username: '',
   password: '',
+  isFetching: false,
+  isSuccess: false,
+  isError: false,
+  errorMessage: '',
 };
 
 const userSlice = createSlice({
@@ -13,6 +17,24 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    fullname: (state, action) => {
+      state.fullname = action.payload;
+    },
+    phoneNumber: (state, action) => {
+      state.phoneNumber = action.payload;
+    },
+    username: (state, action) => {
+      state.username = action.payload;
+    },
+    password: (state, action) => {
+      state.password = action.payload;
+    },
+    email: (state, action) => {
+      state.email = action.payload;
+    },
+    register: (state, action) => {
+      state.user = action.payload;
+    },
     login: (state, action) => {
       state.user = action.payload;
     },
@@ -22,9 +44,10 @@ const userSlice = createSlice({
   },
 });
 
-export const {login, logout} = userSlice.actions;
+export const {fullname, phoneNumber, username, password, email, login, logout} =
+  userSlice.actions;
 
 //selectors
-export const selectUser = state => state.user.user;
+export const userFieldSelector = state => state.user;
 
 export default userSlice.reducer;

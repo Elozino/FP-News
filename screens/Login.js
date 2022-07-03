@@ -15,11 +15,25 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {COLORS} from '../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import {auth} from '../config/firebase/firebaseConfig';
 
 const Login = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleLogin = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then(userCredentials => {
+        // console.log(userCredentials);
+        const user = userCredentials.user;
+        console.log(user.email);
+        // navigation.navigate('Home')
+      })
+      .catch(err => console.log(err));
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageWrapper}>
@@ -31,7 +45,7 @@ const Login = ({navigation}) => {
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
             placeholder="Email"
-            onChangeText={text => ''}
+            onChangeText={text => setEmail(text)}
             keyboardType="email-address"
             style={styles.inputField}
           />
@@ -40,7 +54,7 @@ const Login = ({navigation}) => {
           <Text style={styles.inputLabel}>Password</Text>
           <TextInput
             placeholder="Password"
-            onChangeText={text => ''}
+            onChangeText={text => setPassword(text)}
             secureTextEntry={true}
             style={styles.inputField}
           />
@@ -58,9 +72,7 @@ const Login = ({navigation}) => {
           <Text style={styles.loginText}>Click here</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>LOGIN</Text>
       </TouchableOpacity>
     </SafeAreaView>

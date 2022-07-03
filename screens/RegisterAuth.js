@@ -14,24 +14,46 @@ import {
   TextInput,
   TouchableOpacity,
   Button,
+  KeyboardAvoidingView,
 } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import {COLORS} from '../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-// import {createUserWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
-// import {auth, googleProvider} from '../config/firebase/firebaseConfig';
+import {createUserWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
+import {auth} from '../config/firebase/firebaseConfig';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  email,
+  password,
+  userFieldSelector,
+} from '../config/redux-toolkit/features/userSlice';
+import {addDoc, collection} from 'firebase/firestore';
 
 const RegisterAuth = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const handleRegister = () => {
-    // createUserWithEmailAndPassword(auth, email, password).then(
-    //   userCredentials => {
-    //     const user = userCredentials.user;
-    //     console.log(user.email);
-    //   },
-    // );
-    navigation.navigate('Home')
+  const dispatch = useDispatch();
+  const userInfo = useSelector(userFieldSelector);
+
+  const handleRegister = async () => {
+    await createUserWithEmailAndPassword(
+      auth,
+      "ovedhee@gmail.com",
+      "123456789",
+    )
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        // addDoc(collection(db, 'users'), {
+        //   uid: user.uid,
+        //   fullname: userInfo.fullname,
+        //   username: userInfo.username,
+        //   phoneNumber: userInfo.phoneNumber,
+        //   email: userInfo.email,
+        //   password: userInfo.password,
+        //   authProvider: 'local',
+        // });
+        // navigation.navigate('Home');
+        console.log(user.email);
+      })
+      .catch(err => console.log(err));
   };
 
   const handleGoogleAuth = () => {
@@ -48,7 +70,9 @@ const RegisterAuth = ({navigation}) => {
   //   });
   // }, []);
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       <View style={styles.imageWrapper}>
         <Image source={require('../assets/logo.png')} style={styles.image} />
       </View>
@@ -58,8 +82,7 @@ const RegisterAuth = ({navigation}) => {
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
             placeholder="Email"
-            value={email}
-            onChangeText={text => setEmail(text)}
+            onChangeText={text => dispatch(email(text))}
             keyboardType="email-address"
             style={styles.inputField}
           />
@@ -68,8 +91,7 @@ const RegisterAuth = ({navigation}) => {
           <Text style={styles.inputLabel}>Password</Text>
           <TextInput
             placeholder="Password"
-            value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={text => dispatch(password(text))}
             secureTextEntry={true}
             style={styles.inputField}
           />
@@ -88,7 +110,7 @@ const RegisterAuth = ({navigation}) => {
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>REGISTER</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -97,6 +119,7 @@ export default RegisterAuth;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    flex: 1,
   },
   imageWrapper: {
     alignItems: 'center',

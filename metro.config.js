@@ -4,7 +4,6 @@
  *
  * @format
  */
-
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({
@@ -13,5 +12,9 @@ module.exports = {
         inlineRequires: true,
       },
     }),
+  },
+  //added this
+  resolver: {
+    sourceExts: ['jsx', 'js', 'ts', 'tsx', 'cjs'],
   },
 };
