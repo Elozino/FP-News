@@ -4,10 +4,8 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  ScrollView,
 } from 'react-native';
 import React, {useEffect} from 'react';
-import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchNews,
@@ -16,6 +14,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS} from '../constants/colors';
 import NewsListing from '../components/NewsListing';
+import {signOut} from 'firebase/auth';
+import { auth } from '../config/firebase/firebaseConfig';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -28,6 +28,18 @@ const Home = ({navigation}) => {
     dispatch(fetchNews());
   }, [dispatch]);
 
+  const handleLogout = () => {
+    signOut(auth);
+  };
+
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        navigation.navigate('Login');
+      }
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -35,7 +47,7 @@ const Home = ({navigation}) => {
           <Text>Good day!</Text>
           <Text style={styles.username}>Elozino</Text>
         </View>
-        <TouchableOpacity style={styles.refresh}>
+        <TouchableOpacity onPress={handleLogout} style={styles.refresh}>
           <Text>Logout</Text>
           {/* <Ionicons name="refresh" size={30} /> */}
         </TouchableOpacity>

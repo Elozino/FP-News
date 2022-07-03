@@ -10,17 +10,15 @@ import {
   Text,
   View,
   Image,
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
-  Button,
   KeyboardAvoidingView,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {COLORS} from '../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {createUserWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
-import {auth} from '../config/firebase/firebaseConfig';
+import {auth, db} from '../config/firebase/firebaseConfig';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   email,
@@ -33,27 +31,51 @@ const RegisterAuth = ({navigation}) => {
   const dispatch = useDispatch();
   const userInfo = useSelector(userFieldSelector);
 
+  // const handleRegister = async () => {
+  //   await createUserWithEmailAndPassword(
+  //     auth,
+  //     userInfo.email,
+  //     userInfo.password,
+  //   )
+  //     .then(userCredentials => {
+  //       const user = userCredentials.user;
+  //       addDoc(collection(db, 'users'), {
+  //         uid: user.uid,
+  //         fullname: userInfo.fullname,
+  //         username: userInfo.username,
+  //         phoneNumber: userInfo.phoneNumber,
+  //         email: userInfo.email,
+  //         password: userInfo.password,
+  //         authProvider: 'local',
+  //       });
+  //       // navigation.navigate('Home');
+  //       console.log(user.email);
+  //     })
+  //     .catch(err => console.log(err));
+  // };
+
   const handleRegister = async () => {
-    await createUserWithEmailAndPassword(
-      auth,
-      "ovedhee@gmail.com",
-      "123456789",
-    )
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        // addDoc(collection(db, 'users'), {
-        //   uid: user.uid,
-        //   fullname: userInfo.fullname,
-        //   username: userInfo.username,
-        //   phoneNumber: userInfo.phoneNumber,
-        //   email: userInfo.email,
-        //   password: userInfo.password,
-        //   authProvider: 'local',
-        // });
-        // navigation.navigate('Home');
-        console.log(user.email);
-      })
-      .catch(err => console.log(err));
+    try {
+      const res = await createUserWithEmailAndPassword(
+        auth,
+        userInfo.email,
+        userInfo.password,
+      );
+      const user = res.user;
+      console.log(user);
+      await addDoc(collection(db, 'users'), {
+        uid: user.uid,
+        fullname: userInfo.fullname,
+        username: userInfo.username,
+        phoneNumber: userInfo.phoneNumber,
+        email: userInfo.email,
+        password: userInfo.password,
+        authProvider: 'local',
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
   };
 
   const handleGoogleAuth = () => {
@@ -62,19 +84,24 @@ const RegisterAuth = ({navigation}) => {
     // );
   };
 
-  // useEffect(() => {
-  //   auth.onAuthStateChanged(user => {
-  //     if (user) {
-  //       navigation.navigate('Home');
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.navigate('Home');
+      }
+    });
+  }, []);
+
+  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
       <View style={styles.imageWrapper}>
-        <Image source={require('../assets/logo.png')} style={styles.image} />
+        <Image
+          source={require('../src/assets/logo.png')}
+          style={styles.image}
+        />
       </View>
       <Text style={styles.title}>SIGN UP</Text>
       <View style={styles.formContainer}>

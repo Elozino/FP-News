@@ -13,24 +13,35 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
-  Button,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {COLORS} from '../constants/colors';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {
   fullname,
   username,
   phoneNumber,
-  email
 } from '../config/redux-toolkit/features/userSlice';
+import {auth} from '../config/firebase/firebaseConfig';
 
 const Register = ({navigation}) => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.navigate('Home');
+      }
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageWrapper}>
-        <Image source={require('../assets/logo.png')} style={styles.image} />
+        <Image
+          source={require('../src/assets/logo.png')}
+          style={styles.image}
+        />
       </View>
       <Text style={styles.title}>SIGN UP</Text>
       <View style={styles.formContainer}>
