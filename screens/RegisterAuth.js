@@ -53,6 +53,7 @@ const RegisterAuth = ({navigation}) => {
             console.log('User added!');
           });
         console.log('User account created & signed in!');
+        setText('');
         alert('User account created & signed in!');
       })
       .catch(error => {

@@ -36,6 +36,8 @@ const Login = ({navigation}) => {
     auth()
       .signInWithEmailAndPassword(userInfo.email, userInfo.password)
       .then(() => {
+        navigation.navigate('Home');
+        setText('');
         console.log('signed in!');
         alert('signed in!');
         // navigation.navigate('Home');
@@ -80,13 +82,13 @@ const Login = ({navigation}) => {
     //   });
   };
 
-  useEffect(() => {
-    firebaseAuth.onAuthStateChanged(user => {
-      if (user) {
-        navigation.navigate('Home');
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   firebaseAuth.onAuthStateChanged(user => {
+  //     if (user) {
+  //       navigation.navigate('Home');
+  //     }
+  //   });
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>
