@@ -11,6 +11,8 @@ import NewsListing from '../components/NewsListing';
 import {firebaseAuth} from '../config/firebase/firebaseConfig';
 import {userFieldSelector} from '../config/redux-toolkit/features/userSlice';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import {getDocs} from 'firebase/firestore';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -32,6 +34,20 @@ const Home = ({navigation}) => {
       });
   };
 
+  const fetch = async () => {
+    const user = auth().currentUser;
+    const userDoc = await firestore()
+      .collection('Users')
+      .where('email', '==', userInfo.email)
+      .get();
+    // const querySnapshot = await firestore().getDocs(userDoc);
+    // console.log(querySnapshot);
+    // console.log(userDoc);
+    // console.log(user)
+  };
+
+  fetch();
+
   useEffect(() => {
     firebaseAuth.onAuthStateChanged(user => {
       if (user) {
@@ -46,7 +62,7 @@ const Home = ({navigation}) => {
         <View>
           <Text>Good day!</Text>
           <Text style={styles.username}>
-            {userInfo.fullname ?? 'Oops no name!!!'}
+            {userInfo.fullname || userInfo.email}
           </Text>
         </View>
         <TouchableOpacity onPress={handleLogout} style={styles.refresh}>

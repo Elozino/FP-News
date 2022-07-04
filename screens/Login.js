@@ -37,7 +37,6 @@ const Login = ({navigation}) => {
       .signInWithEmailAndPassword(userInfo.email, userInfo.password)
       .then(() => {
         navigation.navigate('Home');
-        setText('');
         console.log('signed in!');
         alert('signed in!');
         // navigation.navigate('Home');
