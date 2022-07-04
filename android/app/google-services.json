@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "751970636669",
+    "project_id": "fp-news-c3cbf",
+    "storage_bucket": "fp-news-c3cbf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751970636669:android:2b7a2811d5251f0ff9b214",
+        "android_client_info": {
+          "package_name": "com.barereactnative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "751970636669-k46p5rpe0l911dkceudbp22avs8oenfc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.barereactnative",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "751970636669-ii6rdlgjsugb99nsjul3pcdi3fgrj22d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjLgaSJ5BpJl-Jtpg3-N_Cws5tNTJLwE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751970636669-ii6rdlgjsugb99nsjul3pcdi3fgrj22d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

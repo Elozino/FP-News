@@ -14,85 +14,88 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {COLORS} from '../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {createUserWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
-import {auth, db} from '../config/firebase/firebaseConfig';
+import {firebaseAuth, db} from '../config/firebase/firebaseConfig';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   email,
   password,
   userFieldSelector,
 } from '../config/redux-toolkit/features/userSlice';
-import {addDoc, collection} from 'firebase/firestore';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 const RegisterAuth = ({navigation}) => {
   const dispatch = useDispatch();
   const userInfo = useSelector(userFieldSelector);
-
-  // const handleRegister = async () => {
-  //   await createUserWithEmailAndPassword(
-  //     auth,
-  //     userInfo.email,
-  //     userInfo.password,
-  //   )
-  //     .then(userCredentials => {
-  //       const user = userCredentials.user;
-  //       addDoc(collection(db, 'users'), {
-  //         uid: user.uid,
-  //         fullname: userInfo.fullname,
-  //         username: userInfo.username,
-  //         phoneNumber: userInfo.phoneNumber,
-  //         email: userInfo.email,
-  //         password: userInfo.password,
-  //         authProvider: 'local',
-  //       });
-  //       // navigation.navigate('Home');
-  //       console.log(user.email);
-  //     })
-  //     .catch(err => console.log(err));
-  // };
+  GoogleSignin.configure({
+    webClientId:
+      '751970636669-ii6rdlgjsugb99nsjul3pcdi3fgrj22d.apps.googleusercontent.com',
+  });
 
   const handleRegister = async () => {
-    try {
-      const res = await createUserWithEmailAndPassword(
-        auth,
-        userInfo.email,
-        userInfo.password,
-      );
-      const user = res.user;
-      console.log(user);
-      await addDoc(collection(db, 'users'), {
-        uid: user.uid,
-        fullname: userInfo.fullname,
-        username: userInfo.username,
-        phoneNumber: userInfo.phoneNumber,
-        email: userInfo.email,
-        password: userInfo.password,
-        authProvider: 'local',
+    auth()
+      .createUserWithEmailAndPassword(userInfo.email, userInfo.password)
+      .then(() => {
+        firestore()
+          .collection('Users')
+          .add({
+            fullname: userInfo.fullname,
+            username: userInfo.username,
+            phoneNumber: userInfo.phoneNumber,
+            email: userInfo.email,
+            password: userInfo.password,
+          })
+          .then(() => {
+            console.log('User added!');
+          });
+        console.log('User account created & signed in!');
+        alert('User account created & signed in!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+          alert('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+          alert('That email address is invalid!');
+        }
+
+        console.error(error);
       });
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }
   };
 
-  const handleGoogleAuth = () => {
-    // signInWithPopup(auth, googleProvider).then(result =>
-    //   navigation.navigate('Home'),
-    // );
+  const handleGoogleAuth = async () => {
+    const {idToken} = await GoogleSignin.signIn();
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    // Sign-in the user with the credential
+    const user_sign_in = auth().signInWithCredential(googleCredential);
+    user_sign_in
+      .then(user => {
+        dispatch(fullname(user.name));
+        navigation.navigate('Home');
+        console.log(user);
+      })
+      .catch(err => {
+        alert(err);
+        console.log(err);
+      });
   };
 
   useEffect(() => {
-    auth.onAuthStateChanged(user => {
+    firebaseAuth.onAuthStateChanged(user => {
       if (user) {
         navigation.navigate('Home');
       }
     });
   }, []);
 
-  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -123,6 +126,9 @@ const RegisterAuth = ({navigation}) => {
             style={styles.inputField}
           />
         </View>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>REGISTER</Text>
+        </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.google} onPress={handleGoogleAuth}>
         <Text style={styles.googleText}>Sign up with </Text>
@@ -134,9 +140,6 @@ const RegisterAuth = ({navigation}) => {
           <Text style={styles.loginText}>Login</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>REGISTER</Text>
-      </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 };

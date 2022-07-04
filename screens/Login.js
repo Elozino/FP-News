@@ -13,53 +13,81 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
-  Button,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS} from '../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {auth} from '../config/firebase/firebaseConfig';
+import {firebaseAuth} from '../config/firebase/firebaseConfig';
 import {useDispatch, useSelector} from 'react-redux';
-import {userFieldSelector} from '../config/redux-toolkit/features/userSlice';
+import {
+  email,
+  password,
+  fullname,
+  userFieldSelector,
+} from '../config/redux-toolkit/features/userSlice';
+import auth from '@react-native-firebase/auth';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
   const userInfo = useSelector(userFieldSelector);
-  // const handleLogin = () => {
-  //   signInWithEmailAndPassword(auth, email, password)
-  //     .then(userCredentials => {
-  //       // console.log(userCredentials);
-  //       const user = userCredentials.user;
-  //       console.log(user.email);
-  //       // navigation.navigate('Home')
-  //     })
-  //     .catch(err => console.log(err));
-  // };
 
   const handleLogin = async () => {
-    try {
-      const res = await signInWithEmailAndPassword(
-        auth,
-        userInfo.email,
-        userInfo.password,
-      );
-      const user = res.user;
-      console.log(user);
-      await addDoc(collection(db, 'users'), {
-        uid: user.uid,
-        fullname: userInfo.fullname,
-        username: userInfo.username,
-        phoneNumber: userInfo.phoneNumber,
-        email: userInfo.email,
-        password: userInfo.password,
-        authProvider: 'local',
+    auth()
+      .signInWithEmailAndPassword(userInfo.email, userInfo.password)
+      .then(() => {
+        console.log('signed in!');
+        alert('signed in!');
+        // navigation.navigate('Home');
+      })
+      .catch(error => {
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+          alert('That email address is invalid!');
+        }
+        console.error(error);
       });
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }
   };
+
+  const handleGoogleAuth = async () => {
+    const {idToken} = await GoogleSignin.signIn();
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    // Sign-in the user with the credential
+    const user_sign_in = auth().signInWithCredential(googleCredential);
+    user_sign_in
+      .then(user => {
+        dispatch(fullname(user.additionalUserInfo.profile.name));
+        navigation.navigate('Home');
+        console.log(user.additionalUserInfo.profile.name);
+      })
+      .catch(err => {
+        alert(err);
+        console.log(err);
+      });
+  };
+
+  const forgotPassword = () => {
+    alert('Oops! screen for this yet, Update comming!!!');
+    // console.log('reset email sent to ' + Email);
+    // auth()
+    //   .sendPasswordResetEmail(auth, Email, null)
+    //   .then(() => {
+    //     alert('reset email sent to ' + Email);
+    //   })
+    //   .catch(function (e) {
+    //     console.log(e);
+    //   });
+  };
+
+  useEffect(() => {
+    firebaseAuth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.navigate('Home');
+      }
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageWrapper}>
@@ -68,7 +96,7 @@ const Login = ({navigation}) => {
           style={styles.image}
         />
       </View>
-      <Text style={styles.title}>SIGN IN</Text>
+      <Text style={styles.title}>LOGIN</Text>
       <View style={styles.formContainer}>
         <View style={styles.formContainer}>
           <Text style={styles.inputLabel}>Email</Text>
@@ -88,22 +116,28 @@ const Login = ({navigation}) => {
             style={styles.inputField}
           />
         </View>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>LOGIN</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.google}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text style={{fontSize: 16, fontWeight: '700'}}>OR</Text>
+      </View>
+      <TouchableOpacity style={styles.google} onPress={handleGoogleAuth}>
         <Text style={styles.googleText}>Login with </Text>
         <AntDesign name="google" color={COLORS.blue} size={20} />
       </TouchableOpacity>
       <View style={styles.auth}>
         <Text>Forgot password? </Text>
-        <TouchableOpacity
-        // onPress={() => navigation.navigate('Login')}
-        >
+        <TouchableOpacity onPress={forgotPassword}>
           <Text style={styles.loginText}>Click here</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>LOGIN</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -149,7 +183,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginVertical: 20,
     backgroundColor: '#cecece',
     borderRadius: 5,
     padding: 9,

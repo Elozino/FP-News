@@ -22,13 +22,13 @@ import {
   username,
   phoneNumber,
 } from '../config/redux-toolkit/features/userSlice';
-import {auth} from '../config/firebase/firebaseConfig';
+import {firebaseAuth} from '../config/firebase/firebaseConfig';
 
 const Register = ({navigation}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    auth.onAuthStateChanged(user => {
+    firebaseAuth.onAuthStateChanged(user => {
       if (user) {
         navigation.navigate('Home');
       }

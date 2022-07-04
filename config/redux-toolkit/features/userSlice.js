@@ -6,8 +6,8 @@ const initialState = {
   email: '',
   username: '',
   password: '',
-  isFetching: false,
-  isSuccess: false,
+  initializing: true,
+  isLogged: '',
   isError: false,
   errorMessage: '',
 };
@@ -35,17 +35,24 @@ const userSlice = createSlice({
     register: (state, action) => {
       state.user = action.payload;
     },
-    login: (state, action) => {
+    initializing: (state, action) => {
       state.user = action.payload;
     },
-    logout: state => {
+    isLogged: state => {
       state.user = null;
     },
   },
 });
 
-export const {fullname, phoneNumber, username, password, email, login, logout} =
-  userSlice.actions;
+export const {
+  fullname,
+  phoneNumber,
+  username,
+  password,
+  email,
+  initializing,
+  isLogged,
+} = userSlice.actions;
 
 //selectors
 export const userFieldSelector = state => state.user;

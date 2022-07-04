@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -14,28 +8,34 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS} from '../constants/colors';
 import NewsListing from '../components/NewsListing';
-import {signOut} from 'firebase/auth';
-import { auth } from '../config/firebase/firebaseConfig';
+import {firebaseAuth} from '../config/firebase/firebaseConfig';
+import {userFieldSelector} from '../config/redux-toolkit/features/userSlice';
+import auth from '@react-native-firebase/auth';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
-
   // fetch data from our store
-  const {loading, error, news} = useSelector(itemsSelector);
-  // console.log(loading, error, news);
+  const {news} = useSelector(itemsSelector);
+  const userInfo = useSelector(userFieldSelector);
+
   // hook to fetch items
   useEffect(() => {
     dispatch(fetchNews());
   }, [dispatch]);
 
   const handleLogout = () => {
-    signOut(auth);
+    auth()
+      .signOut()
+      .then(() => {
+        navigation.navigate('Login');
+        console.log('User signed out!');
+      });
   };
 
   useEffect(() => {
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        navigation.navigate('Login');
+    firebaseAuth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.navigate('Home');
       }
     });
   }, []);
@@ -45,7 +45,9 @@ const Home = ({navigation}) => {
       <View style={styles.header}>
         <View>
           <Text>Good day!</Text>
-          <Text style={styles.username}>Elozino</Text>
+          <Text style={styles.username}>
+            {userInfo.fullname ?? 'Oops no name!!!'}
+          </Text>
         </View>
         <TouchableOpacity onPress={handleLogout} style={styles.refresh}>
           <Text>Logout</Text>
@@ -53,13 +55,6 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <Text style={styles.newsText}>News</Text>
-      {/* <ScrollView>
-        <Text>
-          {news.articles.map(article => (
-            <NewsListing newsData={article} navigation={navigation} />
-          ))}
-        </Text>
-      </ScrollView> */}
       <FlatList
         data={news.articles}
         renderItem={({item}) => (
